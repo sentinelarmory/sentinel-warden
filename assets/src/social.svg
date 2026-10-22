@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1280" height="640" viewBox="0 0 1280 640">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b0e15"/>
+      <stop offset="1" stop-color="#11131c"/>
+    </linearGradient>
+    <linearGradient id="rgb" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="0.35" stop-color="#6366f1"/>
+      <stop offset="0.65" stop-color="#d946ef"/>
+      <stop offset="1" stop-color="#f97316"/>
+    </linearGradient>
+    <linearGradient id="rgbw" gradientUnits="userSpaceOnUse" x1="684" y1="0" x2="1094" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="0.35" stop-color="#6366f1"/>
+      <stop offset="0.65" stop-color="#d946ef"/>
+      <stop offset="1" stop-color="#f97316"/>
+    </linearGradient>
+    <radialGradient id="spot" cx="0.5" cy="0.32" r="0.55">
+      <stop offset="0" stop-color="#7c3aed" stop-opacity="0.38"/>
+      <stop offset="1" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0 H0 V32" fill="none" stroke="#ffffff" stroke-opacity="0.035" stroke-width="1"/>
+    </pattern>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+  <rect width="1280" height="640" fill="url(#spot)"/>
+  <rect x="0" y="628" width="1280" height="12" fill="url(#rgb)"/>
+
+  <image x="520" y="40" width="240" height="240" xlink:href="LOGO_PNG"/>
+
+  <text x="640" y="372" text-anchor="middle" font-family="Orbitron" font-weight="800" font-size="76" letter-spacing="4" fill="#f4f4f5">SENTINEL <tspan fill="url(#rgbw)" filter="url(#glow)">WARDEN</tspan></text>
+  <text x="640" y="430" text-anchor="middle" font-family="Rajdhani" font-weight="600" font-size="34" fill="#a1a1aa">ASUS Aura + Logitech lighting back under Corsair iCUE — Murals included.</text>
+
+  <g font-family="Rajdhani" font-weight="600" font-size="24" fill="#e4e4e7">
+    <g transform="translate(282 480)">
+      <rect width="210" height="44" rx="22" fill="#ffffff" fill-opacity="0.05" stroke="#22d3ee" stroke-opacity="0.6"/>
+      <circle cx="24" cy="22" r="8" fill="#22d3ee" filter="url(#glow)"/>
+      <text x="44" y="30">ASUS AURA GPU</text>
+    </g>
+    <g transform="translate(508 480)">
+      <rect width="264" height="44" rx="22" fill="#ffffff" fill-opacity="0.05" stroke="#d946ef" stroke-opacity="0.6"/>
+      <circle cx="24" cy="22" r="8" fill="#d946ef" filter="url(#glow)"/>
+      <text x="44" y="30">ASUS MOTHERBOARD</text>
+    </g>
+    <g transform="translate(788 480)">
+      <rect width="226" height="44" rx="22" fill="#ffffff" fill-opacity="0.05" stroke="#f97316" stroke-opacity="0.6"/>
+      <circle cx="24" cy="22" r="8" fill="#f97316" filter="url(#glow)"/>
+      <text x="44" y="30">LOGITECH G403</text>
+    </g>
+  </g>
+</svg>

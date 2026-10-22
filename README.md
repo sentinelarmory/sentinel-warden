@@ -1,6 +1,16 @@
-# Sentinel Warden
+<p align="center">
+  <img src="assets/banner.png" alt="Sentinel Warden: every light on your desk, under one command: Corsair iCUE" width="100%">
+</p>
 
-*Keeps every light on your desk under one command: Corsair iCUE.*
+<p align="center">
+  <img alt="Windows 11" src="https://img.shields.io/badge/Windows-11-0078D4?style=for-the-badge">
+  <img alt="Corsair iCUE 5" src="https://img.shields.io/badge/Corsair-iCUE%205-FFDE00?style=for-the-badge&logo=corsair&logoColor=black">
+  <img alt="ASUS Aura SDK 3.08" src="https://img.shields.io/badge/ASUS-Aura%20SDK%203.08-00539B?style=for-the-badge&logo=asus&logoColor=white">
+  <img alt="Logitech G HUB" src="https://img.shields.io/badge/Logitech-G%20HUB-00B8FC?style=for-the-badge">
+  <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge">
+</p>
+
+# Sentinel Warden
 
 Two independent fixes for people who run **Corsair iCUE 5** as their one lighting app:
 
@@ -8,6 +18,11 @@ Two independent fixes for people who run **Corsair iCUE 5** as their one lightin
 |---|---|---|
 | [ASUS Aura priority](#1-asus-aura-priority-fix) | After the 2026 Armoury Crate update (Aura Service 3.11 / Aura SDK 3.08.01) iCUE still *lists* your ASUS GPU and motherboard, but they keep their default lighting. | iCUE controls ASUS GPU + motherboard RGB again, also after a reboot. |
 | [Logitech G403 plugin](#2-logitech-g403-plugin-for-icue) | iCUE has no Logitech support, so the mouse sits outside your iCUE effects and Murals. | The mouse shows up in iCUE as its own device (scroll wheel + logo) and can be placed on **Murals**. |
+
+<p align="center">
+  <img src="assets/sync.gif" alt="One iCUE Murals effect sweeping across the ASUS GPU, the motherboard I/O shroud and a Logitech G403, all in sync" width="100%">
+  <br><sub>Illustration: one iCUE Mural driving the ASUS GPU, the motherboard I/O shroud and the Logitech G403 in sync.</sub>
+</p>
 
 Tested on Windows 11, iCUE 5.52, Armoury Crate 6.7.6 with Aura Service 3.11.08 / Aura SDK 3.08.01,
 ASUS ROG Strix Z890-F + ROG Strix RTX 5070 Ti, G HUB 2026.6, Logitech G403 HERO.
