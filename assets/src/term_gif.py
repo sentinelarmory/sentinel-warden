@@ -212,7 +212,7 @@ def scene_cert():
     t.prompt(PLUGIN_DIR)
     t.type('Import-Certificate -FilePath "$env:TEMP\\icue-plugin-signing.cer" -CertStoreLocation Cert:\\LocalMachine\\Root')
     t.wait(600)
-    _security_dialog(t)
+    t.wait(700)   # elevated import into LocalMachine\Root: no dialog (verified)
     t.out()
     t.out("   PSParentPath: Microsoft.PowerShell.Security\\Certificate::LocalMachine\\Root", "fg", 60)
     t.out()

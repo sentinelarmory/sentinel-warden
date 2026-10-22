@@ -156,11 +156,11 @@ Security notes, read these before you do it:
    $cert.Thumbprint
    ```
 
-   Windows asks whether you want to install a root certificate. Answer **Yes**. Write down the
-   **thumbprint** that is printed last (40 hex characters). The certificate goes in the *machine*
-   stores because iCUE's plugin host runs as a Windows service.
+   Write down the **thumbprint** that is printed last (40 hex characters). The certificate goes in the
+   *machine* stores because iCUE's plugin host runs as a Windows service. An elevated import into the
+   machine store happens silently, so you won't get a confirmation dialog.
 
-   <img src="assets/demo-cert.gif" alt="Creating the local code-signing certificate, accepting Windows' root certificate warning, printing the thumbprint" width="100%">
+   <img src="assets/demo-cert.gif" alt="Creating the local code-signing certificate, trusting it on this PC and printing the thumbprint" width="100%">
 3. **Install the plugin** (same admin terminal):
 
    ```powershell
