@@ -41,7 +41,7 @@
 
   <image x="190" y="306" width="900" height="79" preserveAspectRatio="xMidYMid meet" xlink:href="WORDMARK_PNG" filter="url(#wmglow)" opacity="0.75"/>
   <image x="190" y="306" width="900" height="79" preserveAspectRatio="xMidYMid meet" xlink:href="WORDMARK_PNG"/>
-  <text x="640" y="446" text-anchor="middle" font-family="Rajdhani" font-weight="600" font-size="34" fill="#a9c4c9">ASUS Aura + Logitech lighting back under Corsair iCUE — Murals included.</text>
+  <text x="640" y="446" text-anchor="middle" font-family="Rajdhani" font-weight="600" font-size="34" fill="#a9c4c9">ASUS Aura + Logitech mice under Corsair iCUE — Murals included.</text>
 
   <g font-family="Rajdhani" font-weight="600" font-size="24" fill="#e4e4e7">
     <g transform="translate(282 488)">
@@ -57,7 +57,7 @@
     <g transform="translate(788 488)">
       <rect width="226" height="44" rx="22" fill="#ffffff" fill-opacity="0.05" stroke="#7fe3ef" stroke-opacity="0.6"/>
       <circle cx="24" cy="22" r="8" fill="#9fe7f0" filter="url(#glow)"/>
-      <text x="44" y="30">LOGITECH G403</text>
+      <text x="44" y="30">LOGITECH MOUSE</text>
     </g>
   </g>
 </svg>

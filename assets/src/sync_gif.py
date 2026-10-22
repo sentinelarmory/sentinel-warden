@@ -77,7 +77,7 @@ def draw_mouse(d, glow, x, y, t):
     for target in (d, glow):
         target.rounded_rectangle((x + w / 2 - 7, y + 26, x + w / 2 + 7, y + 62), 6, fill=wheel)
         target.ellipse((x + w / 2 - 20, y + 120, x + w / 2 + 20, y + 160), outline=logo, width=7)
-    d.text((x - 10, y + h + 14), "LOGITECH G403", font=LABEL, fill=(214, 232, 236))
+    d.text((x - 10, y + h + 14), "LOGITECH MOUSE", font=LABEL, fill=(214, 232, 236))
 
 
 def frame(t):

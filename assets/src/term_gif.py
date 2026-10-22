@@ -143,7 +143,7 @@ class Term:
 # scenes
 
 AURA_DIR = r"C:\Tools\iCUE-Aura"
-PLUGIN_DIR = r"C:\Tools\iCUE-G403-Plugin"
+PLUGIN_DIR = r"C:\Tools\iCUE-Logitech-Plugin"
 AURA_LOG = r'"C:\ProgramData\ASUS\ARMOURY CRATE Diagnosis\LightingService\AuraSDK.log"'
 THUMB = "8D2C41A7F0E36B9954C1AE07D3B8F26A1C5E94B0"   # example, not a real certificate
 
@@ -266,7 +266,7 @@ def scene_install():
     t = Term("Administrator: Windows PowerShell")
     t.out("# Signs the plugin, copies it into iCUE, restarts in the order Aura needs.", "dim", 1000)
     t.prompt(PLUGIN_DIR)
-    t.type(f"powershell -ExecutionPolicy Bypass -File .\\Install-G403Plugin.ps1 -CertThumbprint {THUMB}")
+    t.type(f"powershell -ExecutionPolicy Bypass -File .\\Install-LogitechPlugin.ps1 -CertThumbprint {THUMB}")
     t.wait(500)
     t.out()
     t.out("iCUE stopped", "fg", 1500)
@@ -277,16 +277,19 @@ def scene_install():
     t.out("iCUE started. Give it ~30 seconds.", "fg", 1400)
     t.out()
     t.prompt(PLUGIN_DIR)
-    t.type("gc C:\\ProgramData\\iCUE-G403-Plugin\\g403-plugin.log -Tail 6")
+    t.type("gc C:\\ProgramData\\iCUE-Logitech-Plugin\\plugin.log -Tail 9")
     t.wait(300)
-    t.out("2026-10-21 16:25:28.709 subscribe (mode 0)", "fg", 40)
-    t.out("2026-10-21 16:25:28.709 setMode 2 (was 0)", "fg", 40)
-    t.out("2026-10-21 16:25:28.709 announce connected", "fg", 40)
-    t.out("2026-10-21 16:25:28.722 getDeviceInfo -> Logitech G403 HERO", "fg", 40)
-    t.out("2026-10-21 16:25:28.722 getDeviceView 0", "fg", 40)
-    t.out("2026-10-21 16:25:29.220 Logitech SDK ready (after 0 failed attempts)", "green", 900, bold=True)
+    t.out('2026-10-22 04:21:36.145 config: "Logitech G403 HERO", 2 zone(s)', "fg", 40)
+    t.out('2026-10-22 04:21:36.146   zone 1: "Scroll wheel" -> SDK zone 0, shape wheel', "fg", 40)
+    t.out('2026-10-22 04:21:36.146   zone 2: "Logo" -> SDK zone 1, shape logo', "fg", 40)
+    t.out("2026-10-22 04:21:36.147 subscribe (mode 0)", "fg", 40)
+    t.out("2026-10-22 04:21:36.148 setMode 2 (was 0)", "fg", 40)
+    t.out("2026-10-22 04:21:36.148 announce connected", "fg", 40)
+    t.out("2026-10-22 04:21:36.165 getDeviceInfo -> Logitech G403 HERO", "fg", 40)
+    t.out("2026-10-22 04:21:36.166 getDeviceView 0", "fg", 40)
+    t.out("2026-10-22 04:21:36.661 Logitech SDK ready (after 0 failed attempts)", "green", 900, bold=True)
     t.out()
-    t.out("# The G403 is now a device in iCUE: set a colour or drop it on a Mural.", "cyan", 400, bold=True)
+    t.out("# Your mouse is now a device in iCUE: set a colour or drop it on a Mural.", "cyan", 400, bold=True)
     t.prompt(PLUGIN_DIR)
     t.blink(3)
     t.save("demo-install.gif")
@@ -314,7 +317,7 @@ def scene_dont_do():
     t.lines = [[]]
     t.out("# DO let the scripts restart things in order: plugin host -> LightingService -> iCUE.", "dim", 1100)
     t.prompt(PLUGIN_DIR)
-    t.type(f"powershell -ExecutionPolicy Bypass -File .\\Install-G403Plugin.ps1 -CertThumbprint {THUMB}")
+    t.type(f"powershell -ExecutionPolicy Bypass -File .\\Install-LogitechPlugin.ps1 -CertThumbprint {THUMB}")
     t.out("iCUE stopped", "fg", 700)
     t.out("Signed: Valid", "green", 700)
     t.out("Copied to C:\\Program Files\\Corsair\\Corsair iCUE5 Software\\plugins\\Logitech", "fg", 900)
