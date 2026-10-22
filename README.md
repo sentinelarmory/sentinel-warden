@@ -78,6 +78,17 @@ This was worked out and tested on **one** PC:
 If it works (or doesn't) on your hardware, please open an issue with your models and versions so the table
 above can grow.
 
+## Before you start: backups
+
+Both fixes are small and easy to undo, but take a minute to make undoing trivial:
+
+1. **Create a Windows restore point** (Start → *Create a restore point* → *Create*).
+2. **Copy the one ASUS file the fix changes**, `C:\Program Files (x86)\LightingService\PriorityList.xml`, to a
+   safe place. (The script also saves a timestamped copy next to itself on every run.)
+3. **The Logitech plugin changes no existing files.** It only adds one folder,
+   `C:\Program Files\Corsair\Corsair iCUE5 Software\plugins\Logitech`. Deleting that folder and restarting
+   iCUE removes it completely.
+
 ---
 
 ## 1. ASUS Aura priority fix
@@ -311,6 +322,11 @@ powershell -ExecutionPolicy Bypass -File .\Install-LogitechPlugin.ps1 -Remove
 Get-ChildItem Cert:\CurrentUser\My, Cert:\LocalMachine\Root, Cert:\LocalMachine\TrustedPublisher |
     Where-Object Subject -eq 'CN=Local iCUE plugin signing' | Remove-Item
 ```
+
+By hand, if you prefer: quit iCUE, delete `C:\Program Files\Corsair\Corsair iCUE5 Software\plugins\Logitech`
+(reboot first if Windows says a file is in use), start iCUE, then remove the certificate with the
+`Get-ChildItem ... | Remove-Item` line above. If you also use the ASUS fix, run `Set-iCUEAuraPriority.ps1`
+afterwards so iCUE gets the ASUS lights back.
 
 ### Build it yourself
 
