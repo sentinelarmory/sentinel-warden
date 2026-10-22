@@ -1,4 +1,6 @@
-# iCUE fixes: ASUS Aura RGB + Logitech G403 in iCUE
+# Sentinel Warden
+
+*Keeps every light on your desk under one command: Corsair iCUE.*
 
 Two independent fixes for people who run **Corsair iCUE 5** as their one lighting app:
 
