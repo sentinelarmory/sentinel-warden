@@ -1,3 +1,4 @@
 logitech-mouse-plugin/dist/
+logitech-mouse-plugin/tools/** linguist-vendored
 __pycache__/
 *.log
