@@ -223,15 +223,15 @@ after an update, please open an issue with your iCUE log.
 
 <img src="assets/demo-dont-do.gif" alt="DON'T: restarting only the iCUE plugin host leaves Aura's token stale and ASUS falls back to default lighting. DO: the scripts restart in order and iCUE wins the priority check" width="100%">
 
-| ❌ Don't | ✅ Do instead |
+| ✅ Do this | ❌ Not this |
 |---|---|
-| Restart only `iCUEDevicePluginHost` (or copy a new plugin DLL in by hand). Aura keeps the old process as owner and your ASUS lights fall back to default. | Use `Install-G403Plugin.ps1`. It restarts plugin host, then LightingService, then iCUE. Already did it? Run `Set-iCUEAuraPriority.ps1`. |
-| Change lighting in Armoury Crate's **Aura Sync** page while iCUE is in charge. Armoury Crate can take the lights back. | Leave Armoury Crate's services running (iCUE needs them) but keep its Aura page closed. If it grabbed control, run `Set-iCUEAuraPriority.ps1`. |
-| Set a colour on a single device while you use **Murals**. iCUE switches Murals off for *every* device. | Change lighting from the Murals page, or click a Mural again to bring it back. |
-| Turn off G HUB's *"Allow games & applications to control my lighting"*, or quit G HUB. | Keep G HUB running with that setting on. The plugin reconnects by itself when G HUB starts late after boot. |
-| Run another app that drives the mouse's lighting through the Logitech SDK at the same time. The last one to connect wins. | Let the plugin be the only SDK client for the mouse. |
-| Sign files you didn't build or get from this repo with your local certificate. Windows trusts everything it signs. | Use the certificate only for this plugin. Remove it when you uninstall (see *Undo*). |
-| Run the scripts in a normal (non-admin) terminal. | Use **Terminal (Admin)**. The scripts check this first and stop with a clear message before they change anything. |
+| Use `Install-G403Plugin.ps1`. It restarts plugin host, then LightingService, then iCUE. Already did it? Run `Set-iCUEAuraPriority.ps1`. | Restart only `iCUEDevicePluginHost` (or copy a new plugin DLL in by hand). Aura keeps the old process as owner and your ASUS lights fall back to default. |
+| Leave Armoury Crate's services running (iCUE needs them) but keep its Aura page closed. If it grabbed control, run `Set-iCUEAuraPriority.ps1`. | Change lighting in Armoury Crate's **Aura Sync** page while iCUE is in charge. Armoury Crate can take the lights back. |
+| Change lighting from the Murals page, or click a Mural again to bring it back. | Set a colour on a single device while you use **Murals**. iCUE switches Murals off for *every* device. |
+| Keep G HUB running with *"Allow games & applications to control my lighting"* on. The plugin reconnects by itself when G HUB starts late after boot. | Turn off G HUB's *"Allow games & applications to control my lighting"*, or quit G HUB. |
+| Let the plugin be the only SDK client for the mouse. | Run another app that drives the mouse's lighting through the Logitech SDK at the same time. The last one to connect wins. |
+| Use the certificate only for this plugin. Remove it when you uninstall (see *Undo*). | Sign files you didn't build or get from this repo with your local certificate. Windows trusts everything it signs. |
+| Use **Terminal (Admin)**. The scripts check this first and stop with a clear message before they change anything. | Run the scripts in a normal (non-admin) terminal. |
 
 ---
 
