@@ -70,6 +70,8 @@ The fix raises iCUE's priority to 5. Two catches:
 
    It backs up `PriorityList.xml` next to the script, sets iCUE to 5, restarts LightingService and
    restarts iCUE (as your normal user). Your ASUS GPU/motherboard should follow iCUE within ~20 s.
+
+   <img src="assets/demo-asus-fix.gif" alt="Running Set-iCUEAuraPriority.ps1, then AuraSDK.log shows m_priority = 5 and setGUID - done" width="100%">
 3. Make it survive reboots with a logon task (same admin terminal; change the path if you used another folder):
 
    ```powershell
@@ -82,6 +84,8 @@ The fix raises iCUE's priority to 5. Two catches:
 
    With `-AtLogon` the script waits until iCUE is running (about a minute after logon), then applies the
    fix. iCUE restarts once, so its window may blink.
+
+   <img src="assets/demo-logon-task.gif" alt="Registering the 'iCUE Aura priority' logon task; the task shows as Ready" width="100%">
 
 ### Check / undo
 
@@ -149,6 +153,8 @@ Security notes, read these before you do it:
    Windows asks whether you want to install a root certificate. Answer **Yes**. Write down the
    **thumbprint** that is printed last (40 hex characters). The certificate goes in the *machine*
    stores because iCUE's plugin host runs as a Windows service.
+
+   <img src="assets/demo-cert.gif" alt="Creating the local code-signing certificate, accepting Windows' root certificate warning, printing the thumbprint" width="100%">
 3. **Install the plugin** (same admin terminal):
 
    ```powershell
@@ -159,6 +165,8 @@ Security notes, read these before you do it:
    The script signs the DLL and checks that the signature is `Valid`, then copies `Logitech\` to
    `C:\Program Files\Corsair\Corsair iCUE5 Software\plugins\`. After that it restarts the iCUE plugin host,
    LightingService and iCUE in that order.
+
+   <img src="assets/demo-install.gif" alt="Install-G403Plugin.ps1 signs, copies and restarts; the plugin log ends with Logitech SDK ready" width="100%">
 4. After ~30 s **Logitech G403 HERO** appears in iCUE. Set a colour on it or place it on a Mural.
 
 To update, unzip the new release over the old folder and run step 3 again. If the old DLL is still in use, the
@@ -202,6 +210,22 @@ the 19-entry function table, device/LED/view structures) was worked out by study
 ASUS and NVIDIA plugins talk to iCUE's plugin host, for the sole purpose of making this independent
 plugin work with iCUE. A future iCUE update can change that interface. If the plugin stops loading
 after an update, please open an issue with your iCUE log.
+
+---
+
+## Do & Don't
+
+<img src="assets/demo-dont-do.gif" alt="DON'T: restarting only the iCUE plugin host leaves Aura's token stale and ASUS falls back to default lighting. DO: the scripts restart in order and iCUE wins the priority check" width="100%">
+
+| ❌ Don't | ✅ Do instead |
+|---|---|
+| Restart only `iCUEDevicePluginHost` (or copy a new plugin DLL in by hand). Aura keeps the old process as owner and your ASUS lights fall back to default. | Use `Install-G403Plugin.ps1`. It restarts plugin host, then LightingService, then iCUE. Already did it? Run `Set-iCUEAuraPriority.ps1`. |
+| Open Armoury Crate's **Aura Sync** page while iCUE is in charge. Armoury Crate takes the lights back. | Leave Armoury Crate's services running (iCUE needs them) but keep its Aura page closed. If it grabbed control, run `Set-iCUEAuraPriority.ps1`. |
+| Set a colour on a single device while you use **Murals**. iCUE switches Murals off for *every* device. | Change lighting from the Murals page, or click a Mural again to bring it back. |
+| Turn off G HUB's *"Allow games & applications to control my lighting"*, or quit G HUB. | Keep G HUB running with that setting on. The plugin reconnects by itself when G HUB starts late after boot. |
+| Run another app that drives the mouse's lighting through the Logitech SDK at the same time. The last one to connect wins. | Let the plugin be the only SDK client for the mouse. |
+| Sign files you didn't build or get from this repo with your local certificate. Windows trusts everything it signs. | Use the certificate only for this plugin. Remove it when you uninstall (see *Undo*). |
+| Run the scripts in a normal (non-admin) terminal. They stop half-way. | Use **Terminal (Admin)**. The scripts check and tell you. |
 
 ---
 
