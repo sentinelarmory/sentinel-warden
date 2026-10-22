@@ -12,9 +12,9 @@ from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 W, H = 1000, 380
 FRAMES = 60
 OUT = Path(__file__).resolve().parent.parent / "sync.gif"
-BG = (13, 17, 23)
-METAL = (38, 42, 52)
-EDGE = (64, 70, 84)
+BG = (42, 47, 50)
+METAL = (56, 63, 67)
+EDGE = (88, 98, 104)
 
 
 def font(name, size):
@@ -51,7 +51,7 @@ def draw_gpu(d, glow, x, y, t):
         c = wave_color(lx / W, t)
         for target in (d, glow):
             target.rounded_rectangle((lx - 6, y - 14, lx + 6, y - 4), 3, fill=c)
-    d.text((x, y + h + 14), "ASUS GPU", font=LABEL, fill=(212, 212, 216))
+    d.text((x, y + h + 14), "ASUS GPU", font=LABEL, fill=(214, 232, 236))
 
 
 def draw_shroud(d, glow, x, y, t):
@@ -65,7 +65,7 @@ def draw_shroud(d, glow, x, y, t):
         c = wave_color((x + 110) / W, t + k * 0.03)
         for target in (d, glow):
             target.rounded_rectangle((x + 100, ly, x + 128, ly + 36), 6, fill=c)
-    d.text((x, y + h + 14), "MOTHERBOARD I/O", font=LABEL, fill=(212, 212, 216))
+    d.text((x, y + h + 14), "MOTHERBOARD I/O", font=LABEL, fill=(214, 232, 236))
 
 
 def draw_mouse(d, glow, x, y, t):
@@ -77,7 +77,7 @@ def draw_mouse(d, glow, x, y, t):
     for target in (d, glow):
         target.rounded_rectangle((x + w / 2 - 7, y + 26, x + w / 2 + 7, y + 62), 6, fill=wheel)
         target.ellipse((x + w / 2 - 20, y + 120, x + w / 2 + 20, y + 160), outline=logo, width=7)
-    d.text((x - 10, y + h + 14), "LOGITECH G403", font=LABEL, fill=(212, 212, 216))
+    d.text((x - 10, y + h + 14), "LOGITECH G403", font=LABEL, fill=(214, 232, 236))
 
 
 def frame(t):
@@ -89,7 +89,7 @@ def frame(t):
     for px in range(40, W - 40, 4):
         c = wave_color(px / W, t)
         d.rectangle((px, 30, px + 4, 44), fill=c)
-    d.text((40, 54), "iCUE MURALS", font=TITLE, fill=(161, 161, 170))
+    d.text((40, 54), "iCUE MURALS", font=TITLE, fill=(169, 196, 201))
 
     draw_gpu(d, g, 60, 150, t)
     draw_shroud(d, g, 520, 120, t)

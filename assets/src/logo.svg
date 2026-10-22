@@ -1,19 +1,19 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
   <defs>
     <linearGradient id="rgb" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#22d3ee"/>
-      <stop offset="0.35" stop-color="#6366f1"/>
-      <stop offset="0.65" stop-color="#d946ef"/>
-      <stop offset="1" stop-color="#f97316"/>
+      <stop offset="0" stop-color="#e6fbfd"/>
+      <stop offset="0.35" stop-color="#9fe7f0"/>
+      <stop offset="0.7" stop-color="#4fb3c4"/>
+      <stop offset="1" stop-color="#2a7f8f"/>
     </linearGradient>
     <linearGradient id="visor" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#22d3ee"/>
-      <stop offset="0.5" stop-color="#e879f9"/>
-      <stop offset="1" stop-color="#fb923c"/>
+      <stop offset="0" stop-color="#7fe3ef"/>
+      <stop offset="0.5" stop-color="#f2feff"/>
+      <stop offset="1" stop-color="#7fe3ef"/>
     </linearGradient>
     <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#1b1f2a"/>
-      <stop offset="1" stop-color="#0b0d12"/>
+      <stop offset="0" stop-color="#2f3a3f"/>
+      <stop offset="1" stop-color="#151b1e"/>
     </linearGradient>
     <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="10" result="b"/>
@@ -26,7 +26,7 @@
 
   <!-- halo behind the shield -->
   <path d="M256 40 L430 104 V250 C430 360 352 432 256 472 C160 432 82 360 82 250 V104 Z"
-        fill="url(#rgb)" opacity="0.45" filter="url(#softglow)"/>
+        fill="#5fd4e4" opacity="0.35" filter="url(#softglow)"/>
   <!-- shield -->
   <path d="M256 40 L430 104 V250 C430 360 352 432 256 472 C160 432 82 360 82 250 V104 Z"
         fill="url(#body)" stroke="url(#rgb)" stroke-width="14" stroke-linejoin="round"/>
