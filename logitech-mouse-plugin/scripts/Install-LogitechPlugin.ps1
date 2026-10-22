@@ -1,13 +1,13 @@
-# Install-G403Plugin.ps1
-# Signs the G403 iCUE plugin with YOUR local code-signing certificate (see the
+# Install-LogitechPlugin.ps1
+# Signs the Logitech iCUE plugin with YOUR local code-signing certificate (see the
 # README, "Create your signing certificate"), copies it into iCUE's plugins
 # folder and restarts everything in the order the ASUS Aura priority fix needs:
 # iCUE plugin host first, then LightingService, then iCUE (so iCUE takes the
 # Aura token last).
 #
 # Run in an elevated PowerShell from the folder that contains .\Logitech:
-#   .\Install-G403Plugin.ps1 -CertThumbprint <your certificate thumbprint>
-#   .\Install-G403Plugin.ps1 -Remove
+#   .\Install-LogitechPlugin.ps1 -CertThumbprint <your certificate thumbprint>
+#   .\Install-LogitechPlugin.ps1 -Remove
 
 param(
     [string]$CertThumbprint,
@@ -30,7 +30,7 @@ Get-Process iCUE -ErrorAction SilentlyContinue | Stop-Process -Force
 Write-Host 'iCUE stopped'
 
 if (-not $Remove) {
-    $dll  = Join-Path $source 'g403_plugin.dll'
+    $dll  = Join-Path $source 'logitech_plugin.dll'
     $cert = Get-Item "Cert:\CurrentUser\My\$CertThumbprint"
     Set-AuthenticodeSignature -FilePath $dll -Certificate $cert -HashAlgorithm SHA256 | Out-Null
     $status = (Get-AuthenticodeSignature $dll).Status
@@ -48,11 +48,14 @@ while ((Get-Process iCUEDevicePluginHost -ErrorAction SilentlyContinue) -and (Ge
 if (-not $Remove) {
     New-Item -ItemType Directory -Force $target | Out-Null
     Get-ChildItem $target -Filter '*.dll.old*' -ErrorAction SilentlyContinue | Remove-Item -Force -ErrorAction SilentlyContinue
-    $installed = Join-Path $target 'g403_plugin.dll'
-    if (Test-Path $installed) {
-        # A loaded DLL cannot be overwritten but can be renamed; iCUE only loads *.dll.
-        try { Remove-Item $installed -Force -ErrorAction Stop }
-        catch { Rename-Item $installed ("g403_plugin.dll.old-{0:yyyyMMddHHmmss}" -f (Get-Date)); Write-Host 'Old DLL was in use: renamed' }
+    # Current DLL plus g403_plugin.dll from v1.0 (otherwise iCUE would load both).
+    foreach ($name in 'logitech_plugin.dll', 'g403_plugin.dll') {
+        $installed = Join-Path $target $name
+        if (Test-Path $installed) {
+            # A loaded DLL cannot be overwritten but can be renamed; iCUE only loads *.dll.
+            try { Remove-Item $installed -Force -ErrorAction Stop }
+            catch { Rename-Item $installed ("$name.old-{0:yyyyMMddHHmmss}" -f (Get-Date)); Write-Host "Old $name was in use: renamed" }
+        }
     }
     Copy-Item -Force (Join-Path $source '*') $target
     Write-Host "Copied to $target"
