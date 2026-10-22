@@ -38,15 +38,16 @@ ASUS ROG Strix Z890-F + ROG Strix RTX 5070 Ti, G HUB 2026.6, Logitech G403 HERO.
 
 ### What is going on
 
-iCUE drives ASUS RGB through its ASUS plugin, which talks to ASUS's Aura SDK. Aura SDK **3.08.01**
-added a priority check: an app only gets lighting control if its priority in
+iCUE drives ASUS RGB through its ASUS plugin, which talks to ASUS's Aura SDK. Since Aura SDK **3.08.01**
+the SDK checks priorities before it hands over lighting control (with 3.07.05 the same log shows no such
+check): an app only gets control if its priority in
 
 ```
 C:\Program Files (x86)\LightingService\PriorityList.xml
 ```
 
-is **higher** than the current owner's. ASUS ships `LightingService.exe = 3` and
-`iCUEDevicePluginHost.exe = 1`, so iCUE loses silently. You can see it in
+is **higher** than the current owner's. After the update the file lists `LightingService.exe = 3` and
+`iCUEDevicePluginHost.exe = 1`, so iCUE loses, and nothing tells you. The SDK's own log shows it,
 `C:\ProgramData\ASUS\ARMOURY CRATE Diagnosis\LightingService\AuraSDK.log`:
 
 ```
@@ -72,6 +73,8 @@ The fix raises iCUE's priority to 5. Two catches:
    restarts iCUE (as your normal user). Your ASUS GPU/motherboard should follow iCUE within ~20 s.
 
    <img src="assets/demo-asus-fix.gif" alt="Running Set-iCUEAuraPriority.ps1, then AuraSDK.log shows m_priority = 5 and setGUID - done" width="100%">
+   <br><sub>The terminal demos in this README are re-enacted with output from real runs. Paths are generic,
+   the thumbprint is an example, and log line numbers are illustrative.</sub>
 3. Make it survive reboots with a logon task (same admin terminal; change the path if you used another folder):
 
    ```powershell
@@ -93,8 +96,8 @@ The fix raises iCUE's priority to 5. Two catches:
 * `Set-iCUEAuraPriority.log` (next to the script) shows each run.
 * Undo: `Unregister-ScheduledTask -TaskName 'iCUE Aura priority' -Confirm:$false`.
   The next reboot puts ASUS's default back.
-* **Do not open Armoury Crate's Aura Sync page while iCUE is in charge.** It takes control back. Run the
-  script again if that happens.
+* **Avoid changing lighting in Armoury Crate's Aura Sync page while iCUE is in charge.** Armoury Crate
+  can take the lights back. If your ASUS devices stop following iCUE, run the script again.
 
 ---
 
@@ -107,11 +110,12 @@ hardware. It adds a device called *Logitech G403 HERO* with two LEDs (scroll whe
 iCUE are forwarded to the mouse through the **Logitech LED SDK that G HUB installs**. G HUB stays the
 mouse's driver and must keep running.
 
-* Works for the **G403** and **G703** (both use zone 0 = scroll wheel, zone 1 = logo). Other Logitech mice
-  get the same two colours on whatever zones they have.
-* The plugin reports itself to iCUE as a **GPU-type device**. That is deliberate: iCUE only offers plugin
-  devices of the GPU/motherboard kind on Murals. In Murals it is therefore drawn with iCUE's GPU picture,
-  while on the Home page it shows our mouse drawing.
+* Tested with the **G403 HERO**. The **G703** uses the same two zones in Logitech's SDK documentation
+  (zone 0 = scroll wheel, zone 1 = logo), so it should work too, but it is untested. The SDK sends the
+  colours to every connected Logitech mouse; how a mouse with a different zone layout reacts is untested.
+* The plugin reports itself to iCUE as a **GPU-type device**. That is deliberate: when it reported itself as
+  a mouse, iCUE did not offer it on Murals; as a GPU it is offered. In Murals it is therefore drawn with
+  iCUE's GPU picture.
 * Log: `C:\ProgramData\iCUE-G403-Plugin\g403-plugin.log`.
 
 ### Requirements
@@ -128,7 +132,9 @@ PC**, tell Windows to trust it, and sign the DLL with it.
 
 Security notes, read these before you do it:
 
-* The private key is created **non-exportable**, so it cannot be copied off your PC.
+* The private key is created **non-exportable**: Windows' own tools won't export it. That is not a vault,
+  though. Malware or a person with admin rights on your PC could still dig it out, just as they could do
+  far worse things already.
 * Windows will trust **anything signed with this certificate on this PC**. Never share the certificate, and
   don't sign files you didn't build or download from here yourself.
 * The certificate is limited to code signing. You can remove it at any time (see *Undo*).
@@ -220,12 +226,12 @@ after an update, please open an issue with your iCUE log.
 | ❌ Don't | ✅ Do instead |
 |---|---|
 | Restart only `iCUEDevicePluginHost` (or copy a new plugin DLL in by hand). Aura keeps the old process as owner and your ASUS lights fall back to default. | Use `Install-G403Plugin.ps1`. It restarts plugin host, then LightingService, then iCUE. Already did it? Run `Set-iCUEAuraPriority.ps1`. |
-| Open Armoury Crate's **Aura Sync** page while iCUE is in charge. Armoury Crate takes the lights back. | Leave Armoury Crate's services running (iCUE needs them) but keep its Aura page closed. If it grabbed control, run `Set-iCUEAuraPriority.ps1`. |
+| Change lighting in Armoury Crate's **Aura Sync** page while iCUE is in charge. Armoury Crate can take the lights back. | Leave Armoury Crate's services running (iCUE needs them) but keep its Aura page closed. If it grabbed control, run `Set-iCUEAuraPriority.ps1`. |
 | Set a colour on a single device while you use **Murals**. iCUE switches Murals off for *every* device. | Change lighting from the Murals page, or click a Mural again to bring it back. |
 | Turn off G HUB's *"Allow games & applications to control my lighting"*, or quit G HUB. | Keep G HUB running with that setting on. The plugin reconnects by itself when G HUB starts late after boot. |
 | Run another app that drives the mouse's lighting through the Logitech SDK at the same time. The last one to connect wins. | Let the plugin be the only SDK client for the mouse. |
 | Sign files you didn't build or get from this repo with your local certificate. Windows trusts everything it signs. | Use the certificate only for this plugin. Remove it when you uninstall (see *Undo*). |
-| Run the scripts in a normal (non-admin) terminal. They stop half-way. | Use **Terminal (Admin)**. The scripts check and tell you. |
+| Run the scripts in a normal (non-admin) terminal. | Use **Terminal (Admin)**. The scripts check this first and stop with a clear message before they change anything. |
 
 ---
 
