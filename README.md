@@ -208,7 +208,7 @@ same colours.
 ### Requirements
 
 * Corsair iCUE 5 and Logitech G HUB, both running.
-* In G HUB settings: **"Allow games & applications to control my lighting"** turned on.
+* In G HUB settings: **"Allow games and applications to control lighting"** turned on.
 * If you also have ASUS RGB: do fix 1 first. The installer below restarts LightingService in the right order.
 
 ### Why you need your own signing certificate
@@ -264,8 +264,9 @@ Security notes, read these before you do it:
 5. After ~30 s your mouse appears in iCUE under the name from `plugin.ini`. Set a colour on it or place it
    on a Mural.
 
-To update, unzip the new release over the old folder (keep your `plugin.ini`) and run step 4 again. If the old
-DLL is still in use, the script renames it to `*.dll.old-<time>`; iCUE ignores those, and a later run deletes them.
+To update: copy your edited `Logitech\plugin.ini` somewhere safe, unzip the new release over the old folder
+(this overwrites `plugin.ini` with the default), put your copy back, and run step 4 again. If the old DLL is
+still in use, the script renames it to `*.dll.old-<time>`; iCUE ignores those, and a later run deletes them.
 
 ### Configure your mouse
 
@@ -287,14 +288,16 @@ zone2_shape=logo
 
 **Mouse not in the table?** Start with `zones=2`, ids `0` and `1`, install, then set zone 1 to red and
 zone 2 to blue in iCUE and look at the mouse. Swap ids or names until they match, or try `zones=1`. The plugin
-log lists the zones it read (`config: ...`), and typos fall back to safe defaults with a message there.
+log lists the zones it read (`config: ...`), so check there that it picked up what you meant. An unknown
+`zoneN_shape` or a `zones` value outside 1-10 is logged and replaced by a default. A `zoneN_id` that isn't a
+number silently becomes 0.
 
 ### Troubleshooting
 
 | Symptom | What to check |
 |---|---|
 | Mouse does not appear in iCUE | iCUE log `%LOCALAPPDATA%\Corsair\Logs\CUE5\<newest>.log`: search for `logitech_plugin`. `Signature verification failed` means the certificate is not in *LocalMachine\Root* or the DLL was not signed. |
-| Mouse appears, lights don't change | Plugin log: `Logitech SDK ready` must be there. `init failed` is normal right after boot, because G HUB starts minutes after iCUE. The plugin retries every 5 s. Check the G HUB "allow applications" setting and that no locked LIGHTSYNC/game profile is active in G HUB. |
+| Mouse appears, lights don't change | Plugin log: `Logitech SDK ready` must be there. `init failed` is normal right after boot, because G HUB starts minutes after iCUE. The plugin retries every 5 s. Check the G HUB setting "Allow games and applications to control lighting" and that no locked LIGHTSYNC/game profile is active in G HUB. |
 | Wrong part of the mouse lights up | Swap the `zoneN_id` values in `plugin.ini` and reinstall. |
 | Mouse shows up twice | An old `g403_plugin.dll` from v1.0 is still in iCUE's `plugins\Logitech` folder. Run the installer again. It removes it. |
 | ASUS devices lost iCUE colours after installing | Run the ASUS script again. Restarting only iCUE's plugin host without then restarting LightingService leaves Aura's control token with the old process. |
@@ -333,7 +336,7 @@ That works for colours but iCUE then leaves it out of Murals.
 | Use `Install-LogitechPlugin.ps1`. It restarts plugin host, then LightingService, then iCUE. Already did it? Run `Set-iCUEAuraPriority.ps1`. | Restart only `iCUEDevicePluginHost` (or copy a new plugin DLL in by hand). Aura keeps the old process as owner and your ASUS lights fall back to default. |
 | Leave Armoury Crate's services running (iCUE needs them), but don't change lighting in its Aura Sync page. If it grabbed control, run `Set-iCUEAuraPriority.ps1`. | Change lighting in Armoury Crate's **Aura Sync** page while iCUE is in charge. Armoury Crate can take the lights back. |
 | Change lighting from the Murals page, or click a Mural again to bring it back. | Set a colour on a single device while you use **Murals**. iCUE switches Murals off for *every* device. |
-| Keep G HUB running with *"Allow games & applications to control my lighting"* on. The plugin reconnects by itself when G HUB starts late after boot. | Turn off G HUB's *"Allow games & applications to control my lighting"*, or quit G HUB. |
+| Keep G HUB running with *"Allow games and applications to control lighting"* on. The plugin reconnects by itself when G HUB starts late after boot. | Turn off G HUB's *"Allow games and applications to control lighting"*, or quit G HUB. |
 | Let the plugin be the only SDK client for the mouse. | Run another app that drives the mouse's lighting through the Logitech SDK at the same time. The last one to connect wins. |
 | Use the certificate only for this plugin. Remove it when you uninstall (see *Undo*). | Sign files you didn't build or get from this repo with your local certificate. Windows trusts everything it signs. |
 | Use **Terminal (Admin)**. The scripts check this first and stop with a clear message before they change anything. | Run the scripts in a normal (non-admin) terminal. |
