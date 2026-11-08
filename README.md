@@ -7,26 +7,29 @@
   <img alt="Corsair iCUE 5" src="https://img.shields.io/badge/Corsair-iCUE%205-FFDE00?style=for-the-badge&logo=corsair&logoColor=black">
   <img alt="ASUS Aura SDK 3.08" src="https://img.shields.io/badge/ASUS-Aura%20SDK%203.08-00539B?style=for-the-badge&logo=asus&logoColor=white">
   <img alt="Logitech G HUB" src="https://img.shields.io/badge/Logitech-G%20HUB-00B8FC?style=for-the-badge">
+  <img alt="Razer Synapse 4" src="https://img.shields.io/badge/Razer-Synapse%204-44D62C?style=for-the-badge&logoColor=black">
   <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-22c55e?style=for-the-badge">
 </p>
 
 # Sentinel Warden
 
-Two fixes for people who want **Corsair iCUE 5** to be the one app that runs all their lighting:
+Three fixes for people who want **Corsair iCUE 5** to be the one app that runs all their lighting:
 
 | Fix | Problem | Result |
 |---|---|---|
 | [ASUS Aura priority fix](#1-asus-aura-priority-fix) | After an Armoury Crate update to **Aura SDK 3.08**, iCUE still lists your ASUS devices but can no longer change their lighting. | iCUE controls your ASUS Aura RGB again, also after a reboot. |
 | [Logitech mouse plugin](#2-logitech-mouse-plugin-for-icue) | iCUE has no Logitech support, so your mouse sits outside your iCUE effects and Murals. | Your Logitech mouse becomes a device in iCUE and can be placed on **Murals**. |
+| [Razer Tartarus V2 plugin](#3-razer-tartarus-v2-plugin-for-icue) | iCUE has no Razer support, and Razer Synapse 4 has no lighting profile for the Tartarus V2, so it sits outside your iCUE effects. | Your Tartarus V2 becomes a device in iCUE, can be placed on **Murals** and follows it smoothly. Key mappings and macros are not touched. |
 
 <p align="center">
   <img src="assets/sync.gif" alt="One iCUE Murals effect sweeping across an ASUS GPU, the motherboard I/O shroud and a Logitech mouse, all in sync" width="100%">
   <br><sub>Illustration: one iCUE Mural driving an ASUS GPU, the motherboard I/O shroud and a Logitech mouse in sync.</sub>
 </p>
 
-> **Not affiliated with Corsair, ASUS or Logitech.** All trademarks belong to their owners.
+> **Not affiliated with Corsair, ASUS, Logitech or Razer.** All trademarks belong to their owners.
 > No files from those vendors are included: the scripts change a setting in ASUS's own config file,
-> and the plugin loads the Logitech LED SDK that G HUB already installed on your PC.
+> the Logitech plugin loads the Logitech LED SDK that G HUB already installed on your PC, and the Razer plugin
+> talks to the keypad's own USB control interface and contains no Razer software.
 > Use at your own risk.
 
 ## Is this for you?
@@ -44,6 +47,11 @@ Two fixes for people who want **Corsair iCUE 5** to be the one app that runs all
 - [ ] You have a Logitech mouse with RGB lighting, controlled by **G HUB**.
 - [ ] You want it to follow iCUE (and iCUE Murals) instead of running its own effects in G HUB.
 
+**Razer Tartarus V2 plugin: it is meant for you if:**
+
+- [ ] You have a **Razer Tartarus V2** (USB `1532:022B`) and Razer Synapse installed (Synapse keeps your key mappings and macros).
+- [ ] You want its backlight to follow iCUE (and iCUE Murals) instead of Synapse's own effects.
+
 ## Tested on
 
 This was worked out and tested on **one** PC:
@@ -57,6 +65,7 @@ This was worked out and tested on **one** PC:
 | Corsair | iCUE 5.52, plugin host as shipped with it |
 | ASUS | Armoury Crate 6.7.6, AURA Service (LightingService) 3.11.08, Aura SDK 3.08.01 |
 | Logitech | G HUB 2026.6 |
+| Keypad | Razer Tartarus V2 (USB 1532:022B), Razer Synapse 4.0.896 |
 
 ### Why it may not work on similar hardware
 
@@ -73,21 +82,24 @@ This was worked out and tested on **one** PC:
 - **Logitech mice differ in zones.** Logitech's LED SDK numbers each mouse's lighting zones differently,
   newer mice are not in Logitech's documentation, and some G HUB profiles (locked LIGHTSYNC, game profiles)
   override SDK colours.
-- **Windows 10, ARM PCs, other iCUE/G HUB versions:** untested.
+- **The Tartarus plugin speaks Razer's USB protocol directly.** Razer does not document it; the layout used here follows the open-source OpenRazer project's documentation. Other Razer devices use other interfaces, zones and matrix sizes, and a Synapse update could change how it treats the keypad. Only the Tartarus V2 above was tested.
+- **Windows 10, ARM PCs, other iCUE/G HUB/Synapse versions:** untested.
 
 If it works (or doesn't) on your hardware, please open an issue with your models and versions so the table
 above can grow.
 
 ## Before you start: backups
 
-Both fixes are small and easy to undo, but take a minute to make undoing trivial:
+All of this is small and easy to undo, but take a minute to make undoing trivial:
 
 1. **Create a Windows restore point** (Start → *Create a restore point* → *Create*).
 2. **Copy the one ASUS file the fix changes**, `C:\Program Files (x86)\LightingService\PriorityList.xml`, to a
    safe place. (The script also saves a timestamped copy next to itself on every run.)
-3. **The Logitech plugin changes no existing files.** It only adds one folder,
-   `C:\Program Files\Corsair\Corsair iCUE5 Software\plugins\Logitech`. Deleting that folder and restarting
-   iCUE removes it completely.
+3. **The Logitech and Tartarus plugins change no existing files.** Each only adds one folder under
+   `C:\Program Files\Corsair\Corsair iCUE5 Software\plugins\` (`Logitech` and `Razer`). Deleting that folder
+   and restarting iCUE removes it completely.
+4. **Razer Synapse:** the Tartarus plugin only sends lighting. Your key mappings, macros and profiles are
+   never read or written. If you want a copy anyway, export your Synapse profiles first.
 
 ---
 
@@ -343,6 +355,130 @@ That works for colours but iCUE then leaves it out of Murals.
 
 ---
 
+## 3. Razer Tartarus V2 plugin for iCUE
+
+### What it is
+
+`tartarus_plugin.dll` is a second iCUE **device plugin**, the same kind as the Logitech one above. It shows a
+**Razer Tartarus V2** in iCUE as a device with 20 key LEDs in a 4×5 grid, so it can be placed on **Murals**
+and follow iCUE's effects. It forwards iCUE's colours to the keypad over its USB control channel.
+
+* **Lighting only.** Key mappings, macros and profiles stay in Razer Synapse and are never touched. Synapse
+  keeps running and keeps owning the keys.
+* The Tartarus has **one** backlight zone, so the 20 key LEDs are averaged into one colour (`led=N` follows a
+  single key instead).
+* Like the Logitech plugin it reports itself as a **GPU-type device**, so iCUE offers it on Murals.
+* Log: `C:\ProgramData\iCUE-Razer-Plugin\plugin.log`, with a statistics line every 10 seconds.
+
+### Why not Razer Chroma?
+
+On the tested PC (Synapse 4.0.896), Chroma was a dead end for this keypad: Synapse 4 has no lighting profile
+for the Tartarus V2 (its request for one returns 404), the keypad never shows up in Chroma Connect, and colours
+sent through the Chroma SDK never reached it. So the plugin talks to the keypad directly:
+
+* Razer's control channel is USB interface 2 (`mi_02`). It is registered as a *mouse* collection, so Windows
+  refuses to open it with read/write access (error 5). A handle opened with **access 0** still carries
+  feature reports, which is all that is needed.
+* Colours are sent as Razer **custom frames** (rows of key colours, then "apply custom effect"), not as a
+  static colour. The static effect makes the keypad firmware **fade** to every new colour, which blurs fast
+  effects into a steady tint. In a test, red/blue alternating every 500 ms looked like fading purple with the
+  static effect and like a crisp blink with custom frames.
+* iCUE hands plugins about 17-21 frames per second (the Corsair-native devices get more). The plugin **glides**
+  between them (`smooth_ms`) and writes about 50 times a second; one frame takes about 15 ms.
+* The report layout follows the open-source [OpenRazer](https://openrazer.github.io/) project's documentation of
+  Razer's USB protocol. No OpenRazer or Razer code or files are included.
+
+### Which keypads
+
+| Device | Status |
+|---|---|
+| Razer Tartarus V2 (USB `1532:022B`) | **Tested** |
+| Other Razer keypads and devices | Not supported. The plugin looks for `vid_1532&pid_022b&mi_02` and uses a 4×5 frame. Other devices need other IDs, zones or matrix sizes in `src/tartarus_plugin.c`. |
+
+### Requirements
+
+* Corsair iCUE 5 and Razer Synapse installed. Synapse provides the device driver, and its own key mappings and
+  macros keep working. The Tartarus V2 is connected over USB.
+* A local signing certificate. The one from [section 2](#why-you-need-your-own-signing-certificate) works for
+  this plugin too; create it in step 3 of the Logitech install if you have not yet.
+* If you also have ASUS RGB: do fix 1 first. The installer restarts LightingService in the right order.
+
+### Install
+
+1. Build the plugin (see [Build it yourself](#build-it-yourself-1)), or use `iCUE-Tartarus-Plugin.zip` from
+   [Releases](../../releases) if one is published, and unzip it to a folder that stays, for example
+   `C:\Tools\iCUE-Tartarus-Plugin\`. You should have `Install-TartarusPlugin.ps1` and a `Razer\` folder.
+2. **Create your signing certificate** once, as in step 3 of the [Logitech install](#install), and write down
+   the thumbprint.
+3. **Install the plugin** in **Terminal (Admin)**:
+
+   ```powershell
+   cd C:\Tools\iCUE-Tartarus-Plugin
+   powershell -ExecutionPolicy Bypass -File .\Install-TartarusPlugin.ps1 -CertThumbprint <YOUR_THUMBPRINT>
+   ```
+
+   The script signs the DLL and checks that the signature is `Valid`, then copies `Razer\` to
+   `C:\Program Files\Corsair\Corsair iCUE5 Software\plugins\`. After that it restarts the iCUE plugin host,
+   LightingService and iCUE in that order. Run it from a **local** folder: Windows blocks scripts started from
+   a network path such as `\\wsl.localhost\...`.
+4. After about 30 s **Razer Tartarus V2** appears in iCUE. **Place it on a Mural** (or give it an effect):
+   iCUE only sends colours to a plugin device that is on a Mural or has an effect.
+
+To update, unzip the new build over the old folder (this overwrites `plugin.ini`, so keep a copy of yours) and
+run step 3 again.
+
+### Configure
+
+`Razer\plugin.ini` (edit it in your unzipped folder, then run step 3 again):
+
+```ini
+[tartarus]
+frame=1        ; 1 = custom frame, shown at once (default). 0 = static effect, which the firmware fades.
+led=0          ; 0 = average all 20 keys into one colour. 1..20 = follow one key.
+per_key=0      ; 1 = every key gets its own iCUE colour (a pattern across the keypad, no smoothing).
+boost=0        ; 1 = stretch brightness so a small or dark spot on a Mural still visibly pulses.
+smooth_ms=35   ; glide between iCUE's frames. 0 = off, lower = snappier, higher = softer.
+```
+
+Place the keypad on a Mural **next to** the device you want it to match (it is the colour at its position on the
+Mural that it follows). `boost=0` gives the most faithful colours; `boost=1` is for a keypad that sits in a dark
+area of the Mural and barely changes.
+
+### Troubleshooting
+
+| Symptom | What to check |
+|---|---|
+| Does not appear in iCUE | iCUE log `%LOCALAPPDATA%\Corsair\Logs\CUE5\<newest>.log`: search for `tartarus_plugin`. `Signature verification failed` means the certificate is not in *LocalMachine\Root* or the DLL was not signed. The plugin log should say `Tartarus control channel open`; if it does not, check that Synapse is installed and the keypad is connected over USB. |
+| Appears, lights don't change | Put it on a Mural or give it an effect. In the plugin log the statistics line must show `iCUE colour calls` growing. |
+| Your Synapse colour flashes in now and then | Synapse repaints its own lighting on a timer (every 5 s was measured with its static effect). With `frame=1` (default) this was not seen on the tested PC. If you still see it, set the keypad to a plain colour in Synapse. |
+| Lags behind other devices | iCUE gives plugin devices fewer frames per second than its own devices. `smooth_ms` fills in the gaps; lower it for faster response. The log's `frame avg` should be about 15 ms. |
+| Colours look different from the other devices | Set `boost=0` (default). The keypad's LEDs are not calibrated like the others, so a small difference is normal. |
+
+### Undo
+
+```powershell
+# in Terminal (Admin), from the plugin folder
+powershell -ExecutionPolicy Bypass -File .\Install-TartarusPlugin.ps1 -Remove
+```
+
+By hand: quit iCUE, delete `C:\Program Files\Corsair\Corsair iCUE5 Software\plugins\Razer` (reboot first if
+Windows says a file is in use), start iCUE. Synapse takes the keypad's lighting back by itself. To remove the
+certificate too, see the Logitech *Undo* above.
+
+### Build it yourself
+
+On Linux/WSL with MinGW-w64 (`apt install gcc-mingw-w64-x86-64 zip`):
+
+```bash
+cd razer-tartarus-plugin
+./build.sh            # -> dist/iCUE-Tartarus-Plugin.zip (unsigned; you sign it during install)
+```
+
+`tools/make_images.py` (Pillow) redraws the device pictures; its key grid must match the constants at the top of
+`src/tartarus_plugin.c`.
+
+---
+
 ## Do & Don't
 
 <img src="assets/demo-dont-do.gif" alt="DON'T: restarting only the iCUE plugin host leaves Aura's token stale and ASUS falls back to default lighting. DO: the scripts restart in order and iCUE wins the priority check" width="100%">
@@ -355,6 +491,7 @@ That works for colours but iCUE then leaves it out of Murals.
 | Keep G HUB running with *"Allow games and applications to control lighting"* on. The plugin reconnects by itself when G HUB starts late after boot. | Turn off G HUB's *"Allow games and applications to control lighting"*, or quit G HUB. |
 | Let the plugin be the only SDK client for the mouse. | Run another app that drives the mouse's lighting through the Logitech SDK at the same time. The last one to connect wins. |
 | Use the certificate only for this plugin. Remove it when you uninstall (see *Undo*). | Sign files you didn't build or get from this repo with your local certificate. Windows trusts everything it signs. |
+| Put the Tartarus on a Mural (or give it an effect) and keep Synapse running; it owns your key mappings and macros. | Expect colours on the Tartarus with no effect or Mural assigned: iCUE then sends nothing. Or uninstall Synapse: it provides the keypad's driver. |
 | Use **Terminal (Admin)**. The scripts check this first and stop with a clear message before they change anything. | Run the scripts in a normal (non-admin) terminal. |
 
 ---
@@ -369,6 +506,12 @@ That works for colours but iCUE then leaves it out of Murals.
   independent plugin work with iCUE. The mouse side only uses Logitech's documented LED SDK functions.
   A future iCUE update can change the plugin interface. If the plugin stops loading after an update, please
   open an issue with your iCUE log.
+* **Tartarus plugin:** same iCUE plugin interface as above. For the keypad side, Synapse's logs showed that it
+  has no lighting profile for the Tartarus V2 and that the Chroma SDK never reached it. The control channel was
+  then found by listing the keypad's USB interfaces and reading back the effect the keypad reports it is showing
+  (a read-only command), which made it possible to measure instead of guess: an A/B/C test showed that the static
+  effect fades and that custom frames do not, and per-frame timing in the plugin log found a timer-resolution
+  problem that had made it write only 6-7 frames a second.
 
 ---
 

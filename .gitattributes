@@ -1,2 +1,3 @@
 assets/src/** linguist-vendored
 logitech-mouse-plugin/tools/** linguist-vendored
+razer-tartarus-plugin/tools/** linguist-vendored

@@ -1,3 +1,4 @@
 logitech-mouse-plugin/dist/
 __pycache__/
 *.log
+razer-tartarus-plugin/dist/
