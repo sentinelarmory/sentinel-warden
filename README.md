@@ -410,9 +410,9 @@ sent through the Chroma SDK never reached it. So the plugin talks to the keypad 
 
 ### Install
 
-1. Build the plugin (see [Build it yourself](#build-it-yourself-1)), or use `iCUE-Tartarus-Plugin.zip` from
-   [Releases](../../releases) if one is published, and unzip it to a folder that stays, for example
-   `C:\Tools\iCUE-Tartarus-Plugin\`. You should have `Install-TartarusPlugin.ps1` and a `Razer\` folder.
+1. Download `iCUE-Tartarus-Plugin.zip` from [Releases](../../releases) and unzip it to a folder that stays,
+   for example `C:\Tools\iCUE-Tartarus-Plugin\`. You should have `Install-TartarusPlugin.ps1` and a `Razer\`
+   folder. (Or build it yourself, see [Build it yourself](#build-it-yourself-1).)
 2. **Create your signing certificate** once, as in step 3 of the [Logitech install](#install), and write down
    the thumbprint.
 3. **Install the plugin** in **Terminal (Admin)**:
