@@ -22,8 +22,8 @@ Three fixes for people who want **Corsair iCUE 5** to be the one app that runs a
 | [Razer Tartarus V2 plugin](#3-razer-tartarus-v2-plugin-for-icue) | iCUE has no Razer support, and Razer Synapse 4 has no lighting profile for the Tartarus V2, so it sits outside your iCUE effects. | Your Tartarus V2 becomes a device in iCUE, can be placed on **Murals** and follows it smoothly. Key mappings and macros are not touched. |
 
 <p align="center">
-  <img src="assets/sync.gif" alt="One iCUE Murals effect sweeping across an ASUS GPU, the motherboard I/O shroud and a Logitech mouse, all in sync" width="100%">
-  <br><sub>Illustration: one iCUE Mural driving an ASUS GPU, the motherboard I/O shroud and a Logitech mouse in sync.</sub>
+  <img src="assets/sync.gif" alt="One iCUE Murals effect sweeping across an ASUS GPU, the motherboard I/O shroud, a Razer Tartarus V2 keypad and a Logitech mouse, all in sync" width="100%">
+  <br><sub>Illustration: one iCUE Mural driving an ASUS GPU, the motherboard I/O shroud, a Razer Tartarus V2 and a Logitech mouse in sync.</sub>
 </p>
 
 > **Not affiliated with Corsair, ASUS, Logitech or Razer.** All trademarks belong to their owners.
@@ -369,6 +369,11 @@ and follow iCUE's effects. It forwards iCUE's colours to the keypad over its USB
   single key instead).
 * Like the Logitech plugin it reports itself as a **GPU-type device**, so iCUE offers it on Murals.
 * Log: `C:\ProgramData\iCUE-Razer-Plugin\plugin.log`, with a statistics line every 10 seconds.
+
+<p align="center">
+  <img src="assets/tartarus-flow.gif" alt="A colour pulse travels from an iCUE Mural through the iCUE plugin and a USB control channel to the Razer Tartarus V2, which lights up in that colour. Razer Synapse, with key mappings, macros and profiles, sits apart and is never touched." width="100%">
+  <br><sub>Illustration: how a colour gets from iCUE to the keypad. Synapse stays out of the lighting path.</sub>
+</p>
 
 ### Why not Razer Chroma?
 

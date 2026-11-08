@@ -1,5 +1,5 @@
 """Renders assets/sync.gif: an iCUE Murals wave sweeping across an ASUS GPU,
-the motherboard I/O shroud and a Logitech G403, all lit in sync.
+the motherboard I/O shroud, a Razer Tartarus V2 keypad and a Logitech G403, all lit in sync.
 
 Usage: python3 assets/src/sync_gif.py   (needs Pillow + the Rajdhani/Orbitron fonts)
 """
@@ -9,7 +9,7 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
-W, H = 1000, 380
+W, H = 1160, 380
 FRAMES = 60
 OUT = Path(__file__).resolve().parent.parent / "sync.gif"
 BG = (42, 47, 50)
@@ -80,6 +80,21 @@ def draw_mouse(d, glow, x, y, t):
     d.text((x - 10, y + h + 14), "LOGITECH MOUSE", font=LABEL, fill=(214, 232, 236))
 
 
+def draw_keypad(d, glow, x, y, t):
+    """Razer Tartarus V2: 4x5 key grid, one backlight colour for the whole pad, a thumb pad below."""
+    w, h = 150, 170
+    d.rounded_rectangle((x, y, x + w, y + h), 14, fill=METAL, outline=EDGE, width=2)
+    c = wave_color((x + w / 2) / W, t)
+    for row in range(4):
+        for col in range(5):
+            kx, ky = x + 15 + col * 25, y + 14 + row * 25
+            d.rounded_rectangle((kx, ky, kx + 20, ky + 20), 4, fill=(26, 29, 36))
+            for target in (d, glow):  # the backlight shows around each key
+                target.rounded_rectangle((kx - 3, ky - 3, kx + 23, ky + 23), 6, outline=c, width=2)
+    d.ellipse((x + w / 2 - 22, y + 122, x + w / 2 + 22, y + 160), fill=(30, 33, 40), outline=EDGE, width=2)
+    d.text((x - 4, y + h + 14), "RAZER TARTARUS V2", font=LABEL, fill=(214, 232, 236))
+
+
 def frame(t):
     base = Image.new("RGB", (W, H), BG)
     glow = Image.new("RGB", (W, H), (0, 0, 0))
@@ -91,9 +106,10 @@ def frame(t):
         d.rectangle((px, 30, px + 4, 44), fill=c)
     d.text((40, 54), "iCUE MURALS", font=TITLE, fill=(169, 196, 201))
 
-    draw_gpu(d, g, 60, 150, t)
-    draw_shroud(d, g, 520, 120, t)
-    draw_mouse(d, g, 800, 110, t)
+    draw_gpu(d, g, 50, 150, t)
+    draw_shroud(d, g, 480, 120, t)
+    draw_keypad(d, g, 690, 120, t)
+    draw_mouse(d, g, 960, 110, t)
 
     # LEDs light up their surroundings: blur the LED layer and add it on top
     return ImageChops.add(base, glow.filter(ImageFilter.GaussianBlur(14)))
