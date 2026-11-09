@@ -7,7 +7,7 @@
  * backlight zone, volatile (nothing is stored). Key mappings, macros and profiles belong to
  * Synapse and are never touched.
  *
- * The Tartarus has one backlight zone, so the 20 key LEDs are averaged into one colour
+ * The Tartarus has one backlight zone, so the 22 LEDs (20 keys, thumbpad, wheel) are averaged into one colour
  * (plugin.ini [tartarus] led=N follows a single key instead).
  *
  * Files next to the DLL: plugin.ini (optional), device_view.png, mask.png, thumbnail.png, promo.png.
@@ -33,7 +33,9 @@
 #define LED_ID(i) CPLGPU_ZONE((i) + 1)
 #define ROWS 4
 #define COLS 5
-#define NLEDS (ROWS * COLS)
+#define HW_COLS 6           /* columns the firmware accepts (key 20 sits in the 6th) */
+#define NKEYS (ROWS * COLS)
+#define NLEDS (NKEYS + 2)      /* 20 keys + thumbpad + scroll wheel (one backlight zone, so these two are virtual) */
 #define REPORT_LEN 91          /* report id 0 + 90 bytes */
 #define REFRESH_MS 1000        /* re-send unchanged colour: Synapse repaints its own effect every ~5 s */
 #define MIN_GAP_MS 20          /* at most ~50 frames/s; iCUE hands over ~21/s, so this never throttles */
@@ -230,15 +232,16 @@ static int put_report(HANDLE h, unsigned char cls, unsigned char id, unsigned ch
 
 static int send_frame(HANDLE h, const Rgb keys[NLEDS], int check)
 {
+    /* The firmware matrix is 6 columns wide: column 5 holds key 20 (the thumb button). */
     for (int row = 0; row < ROWS; row++) {
-        unsigned char a[5 + COLS * 3];
+        unsigned char a[5 + HW_COLS * 3];
         memset(a, 0, sizeof(a));
-        a[2] = (unsigned char)row; a[3] = 0; a[4] = COLS - 1;
-        for (int col = 0; col < COLS; col++) {
-            const Rgb *k = &keys[row * COLS + col];
+        a[2] = (unsigned char)row; a[3] = 0; a[4] = HW_COLS - 1;
+        for (int col = 0; col < HW_COLS; col++) {
+            const Rgb *k = &keys[row * COLS + (col < COLS ? col : COLS - 1)];
             a[5 + col * 3] = (unsigned char)k->r; a[6 + col * 3] = (unsigned char)k->g; a[7 + col * 3] = (unsigned char)k->b;
         }
-        if (!put_report(h, 0x0F, 0x03, COLS * 3 + 5, a, (int)sizeof(a), check)) return 0;
+        if (!put_report(h, 0x0F, 0x03, HW_COLS * 3 + 5, a, (int)sizeof(a), check)) return 0;
     }
     const unsigned char apply[12] = { 0x00, 0x05, 0x08 }; /* NOSTORE, BACKLIGHT, custom frame */
     return put_report(h, 0x0F, 0x02, 0x0C, apply, 12, check);
@@ -414,7 +417,10 @@ static void key_rect(char *out, size_t n, int i)
 {
     int row = i / COLS, col = i % COLS;
     int x = GRID_X0 + col * (KEY_W + KEY_GAP), y = GRID_Y0 + row * (KEY_H + KEY_GAP);
-    snprintf(out, n, "M %d %d L %d %d L %d %d L %d %d Z", x, y, x + KEY_W, y, x + KEY_W, y + KEY_H, x, y + KEY_H);
+    int w = KEY_W, h = KEY_H;
+    if (i == NKEYS)     { x = GRID_X0;       y = GRID_Y0 + ROWS * (KEY_H + KEY_GAP) + 6; w = 2 * KEY_W + KEY_GAP; }  /* thumbpad */
+    if (i == NKEYS + 1) { x = GRID_X0 + 3 * (KEY_W + KEY_GAP); y = GRID_Y0 + ROWS * (KEY_H + KEY_GAP) + 6; }       /* scroll wheel */
+    snprintf(out, n, "M %d %d L %d %d L %d %d L %d %d Z", x, y, x + w, y, x + w, y + h, x, y + h);
 }
 
 static CPluginDeviceInfo *get_device_info(const char *device_id)
@@ -435,7 +441,10 @@ static CPluginDeviceInfo *get_device_info(const char *device_id)
     info->leds->items = calloc(NLEDS, sizeof(CPluginLedPosition));
     for (int i = 0; i < NLEDS; i++) {
         /* key pitch ~1.1 cm on a ~6 x 5 cm pad */
-        info->leds->items[i] = (CPluginLedPosition){ LED_ID(i), 0.6 + (i % COLS) * 1.1, 0.6 + (i / COLS) * 1.1, CPLP_CM };
+        double cx = 0.6 + (i % COLS) * 1.1, cy = 0.6 + (i / COLS) * 1.1;
+        if (i == NKEYS)     { cx = 0.6 + 0.55; cy = 0.6 + ROWS * 1.1 + 0.1; }
+        if (i == NKEYS + 1) { cx = 0.6 + 3 * 1.1; cy = 0.6 + ROWS * 1.1 + 0.1; }
+        info->leds->items[i] = (CPluginLedPosition){ LED_ID(i), cx, cy, CPLP_CM };
     }
     log_line("getDeviceInfo -> %s", DEVICE_NAME);
     return info;
@@ -467,7 +476,8 @@ static CPluginDeviceView *get_device_view(const char *device_id, int index)
     for (int i = 0; i < NLEDS; i++) {
         char path[160], label[16];
         key_rect(path, sizeof(path), i);
-        snprintf(label, sizeof(label), "Key %02d", i + 1);
+        if (i < NKEYS) snprintf(label, sizeof(label), "Key %02d", i + 1);
+        else snprintf(label, sizeof(label), "%s", i == NKEYS ? "Thumbpad" : "Wheel");
         view->led_zones->items[i] = (CPluginLedZone){ LED_ID(i), _strdup(path), CPLZ_SHAPE, _strdup(label) };
     }
     log_line("getDeviceView %d", index);

@@ -31,6 +31,10 @@ def draw(size, scale=1.0, offset=(0, 0)):
             x = X0 + c * (KW + GAP)
             y = Y0 + r * (KH + GAP)
             d.rounded_rectangle(box((x, y, x + KW, y + KH)), radius=round(8 * scale), fill=KEY)
+    y = Y0 + ROWS * (KH + GAP) + 6
+    d.rounded_rectangle(box((X0, y, X0 + 2 * KW + GAP, y + KH)), radius=round(8 * scale), fill=KEY)
+    x = X0 + 3 * (KW + GAP)
+    d.rounded_rectangle(box((x, y, x + KW, y + KH)), radius=round(8 * scale), fill=KEY)
     return img
 
 
@@ -54,4 +58,4 @@ def main(out):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "images")
+    main(sys.argv[1] if len(sys.argv) > 1 else "build/tartarus-plugin/Razer")

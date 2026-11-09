@@ -360,13 +360,13 @@ That works for colours but iCUE then leaves it out of Murals.
 ### What it is
 
 `tartarus_plugin.dll` is a second iCUE **device plugin**, the same kind as the Logitech one above. It shows a
-**Razer Tartarus V2** in iCUE as a device with 20 key LEDs in a 4×5 grid, so it can be placed on **Murals**
+**Razer Tartarus V2** in iCUE as a device with 22 LEDs (the 20 keys incl. the thumb button, the thumbpad and the scroll wheel), so it can be placed on **Murals**
 and follow iCUE's effects. It forwards iCUE's colours to the keypad over its USB control channel.
 
 * **Lighting only.** Key mappings, macros and profiles stay in Razer Synapse and are never touched. Synapse
   keeps running and keeps owning the keys.
-* The Tartarus has **one** backlight zone, so the 20 key LEDs are averaged into one colour (`led=N` follows a
-  single key instead).
+* The Tartarus has **one** backlight zone, so the 22 LEDs are averaged into one colour (`led=N` follows a
+  single LED instead). All 20 keys, including key 20 under the thumb, light in that colour.
 * Like the Logitech plugin it reports itself as a **GPU-type device**, so iCUE offers it on Murals.
 * Log: `C:\ProgramData\iCUE-Razer-Plugin\plugin.log`, with a statistics line every 10 seconds.
 
@@ -398,7 +398,7 @@ sent through the Chroma SDK never reached it. So the plugin talks to the keypad 
 | Device | Status |
 |---|---|
 | Razer Tartarus V2 (USB `1532:022B`) | **Tested** |
-| Other Razer keypads and devices | Not supported. The plugin looks for `vid_1532&pid_022b&mi_02` and uses a 4×5 frame. Other devices need other IDs, zones or matrix sizes in `src/tartarus_plugin.c`. |
+| Other Razer keypads and devices | Not supported. The plugin looks for `vid_1532&pid_022b&mi_02` and uses a 4×6 frame (the firmware matrix is 6 columns wide; column 6 is key 20). Other devices need other IDs, zones or matrix sizes in `src/tartarus_plugin.c`. |
 
 ### Requirements
 
@@ -439,7 +439,7 @@ run step 3 again.
 ```ini
 [tartarus]
 frame=1        ; 1 = custom frame, shown at once (default). 0 = static effect, which the firmware fades.
-led=0          ; 0 = average all 20 keys into one colour. 1..20 = follow one key.
+led=0          ; 0 = average all LEDs into one colour. 1..22 = follow one LED.
 per_key=0      ; 1 = every key gets its own iCUE colour (a pattern across the keypad, no smoothing).
 boost=0        ; 1 = stretch brightness so a small or dark spot on a Mural still visibly pulses.
 smooth_ms=35   ; glide between iCUE's frames. 0 = off, lower = snappier, higher = softer.
